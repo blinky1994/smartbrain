@@ -10,12 +10,7 @@ import Register from './components/Register/Register';
 import Particles from "react-particles";
 import { loadFull } from "tsparticles";
 import { useCallback } from "react";
-import Clarifai from 'clarifai';
 import placeholder from './components/Logo/placeholder.png';
-
-const app = new Clarifai.App({
- apiKey: '15213ace8fe2459eba5522c4b00f5eae'
-});
 
 const particlesInit = async (main) => {
     // console.log(main);
@@ -30,12 +25,8 @@ const particlesInit = async (main) => {
     // console.log(container);
   };
 
-class App extends React.Component {
-
-  constructor() {
-    super();
-    this.state = {
-      input: '',
+const initialState = {
+     input: '',
       imageUrl: '',
       box: {},
       route: 'signin',
@@ -45,9 +36,17 @@ class App extends React.Component {
             email: '',
             entries: 0,
             joined: ''
-      }
-    }
-  }
+        }
+}
+
+
+class App extends React.Component {
+
+  constructor() {
+    super();
+    this.state = initialState;
+}
+  
 
   loadUser = (data) => {
     this.setState({user: {
@@ -73,7 +72,6 @@ class App extends React.Component {
   }
 
   displayFaceBox = (box) => {
-    console.log(box);
     this.setState({box: box});
   }
   onInputChange = (event) => {
@@ -82,35 +80,43 @@ class App extends React.Component {
  
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input});
-    app.models
-      .predict(
-        Clarifai.FACE_DETECT_MODEL,
-        this.state.input     
-      )
-      .then((response) => {
-        if (response) {
-            fetch('http://localhost:3001/image', {
-            method: 'put',
+       fetch('http://localhost:3001/imageurl', {
+            method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                id: this.state.user.id,
+                input: this.state.input,
                  })
             })
-            .then(response => response.json())
-            .then(count => {
-                console.log(count);
-                this.setState(Object.assign(this.state.user, {
-                    entries: count.entries
-                }));
-            })
-        }
-        this.displayFaceBox(this.calculateFaceLocation(response));
-      }
-      )
-      .catch((err) => console.log(err));
+             .then(response => response.json())
+             .then((predictObj) => {
+                if (predictObj) {
+                    fetch('http://localhost:3001/image', {
+                    method: 'put',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        id: this.state.user.id,
+                         })
+                    })
+                    .then(response => response.json())
+                    .then(count => {
+                        console.log(count);
+                        this.setState(Object.assign(this.state.user, {
+                            entries: count.entries
+                        }));
+                    })
+                    .catch(console.log)
+                }
+                this.displayFaceBox(this.calculateFaceLocation(predictObj));
+            }
+     )
+      .catch(console.log);
   }
 
   onRouteChange = (route) => {
+    if (route =='signin')
+    {
+        this.setState(initialState);
+    }
     this.setState({route: route});
   }
 
