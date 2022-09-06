@@ -13,6 +13,7 @@ import { useCallback } from "react";
 import placeholder from './components/Logo/placeholder.png';
 import Modal from './components/Modal/Modal';
 import Profile from './components/Profile/Profile';
+import server from './ServerSettings';
 
 const particlesInit = async (main) => {
     // console.log(main);
@@ -26,19 +27,20 @@ const particlesInit = async (main) => {
   const particlesLoaded = (container) => {
     // console.log(container);
   };
-
 const initialState = {
      input: '',
       imageUrl: '',
       box: [],
-      route: 'home',
+      route: 'signin',
       isProfileOpen: false,
       user: {
             id: '',
             name: '',
             email: '',
             entries: 0,
-            joined: ''
+            joined: '',
+            pet: '',
+            age: ''
         }
 }
 
@@ -87,7 +89,7 @@ class App extends React.Component {
  
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input});
-       fetch('https://dry-headland-17016.herokuapp.com/imageurl', {
+       fetch(`${server}/imageurl`, {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -97,7 +99,7 @@ class App extends React.Component {
              .then(response => response.json())
              .then((predictObj) => {
                 if (predictObj) {
-                    fetch('https://dry-headland-17016.herokuapp.com/image', {
+                    fetch(`${server}/image`, {
                     method: 'put',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -135,7 +137,7 @@ class App extends React.Component {
 
 
 render() {
-  const { route, imageUrl, box, isProfileOpen } = this.state;
+  const { route, imageUrl, box, isProfileOpen, user } = this.state;
 
   return (
     <div className="App">
@@ -143,7 +145,10 @@ render() {
         {
            isProfileOpen && 
            <Modal>
-            <Profile isProfileOpen={isProfileOpen} toggleModal={this.toggleModal} />
+            <Profile
+             user={user}
+             isProfileOpen={isProfileOpen}
+             toggleModal={this.toggleModal} />
            </Modal>
         }
       {

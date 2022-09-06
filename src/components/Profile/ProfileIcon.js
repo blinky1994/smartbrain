@@ -30,6 +30,7 @@ export default class ProfileIcon extends Component {
         <DropdownToggle
             data-toggle="dropdown"
             tag="span"
+            className='pointer'
             >
         <img src="http://tachyons.io/img/logo.jpg"
              className="br-100 ba h3 w3 dib" alt="avatar" />

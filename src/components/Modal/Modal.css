@@ -2,3 +2,14 @@
     position: relative;
     z-index: 999;
 }
+
+.modal-close {
+    font-size: 3rem;
+    font-style: bold;
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    color: grey;
+    cursor: pointer;
+}

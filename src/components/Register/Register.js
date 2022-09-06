@@ -1,5 +1,5 @@
 import React from 'react';
-
+import server from '../../ServerSettings';
 class Register extends React.Component {
 	constructor() {
 		super();
@@ -27,7 +27,7 @@ class Register extends React.Component {
 	}
 
 	onSubmitSignIn = () => {
-		fetch('https://dry-headland-17016.herokuapp.com/register', {
+		fetch(`${server}/register`, {
 			method: 'post',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({

@@ -1,4 +1,5 @@
 import React from 'react';
+import server from '../../ServerSettings';
 
 class SignIn extends React.Component {
 	
@@ -17,13 +18,15 @@ class SignIn extends React.Component {
 		this.setState({signInPassword: event.target.value});
 	}
 
-	onSubmitSignIn = () => {
-		fetch('https://dry-headland-17016.herokuapp.com/signin', {
+	onSubmitSignIn = () => {;
+		fetch(`${server}/signin`, {
 			method: 'post',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({
 				email: this.state.signInEmail,
 				password: this.state.signInPassword
+				// email: 'bro@gmail.com',
+				// password: 'bro'
 			})
 		})
 		.then(response => response.json())
@@ -33,7 +36,6 @@ class SignIn extends React.Component {
 	          this.props.onRouteChange('home');
         }
       })
-		
 	}
 
 	render() {
