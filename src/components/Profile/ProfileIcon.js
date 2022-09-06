@@ -21,7 +21,7 @@ export default class ProfileIcon extends Component {
     }
   
     render() {
-    const { direction, ...args } = this.props;
+    const { onRouteChange, toggleModal, direction, ...args } = this.props;
         
     return (
         <div>
@@ -34,10 +34,12 @@ export default class ProfileIcon extends Component {
         <img src="http://tachyons.io/img/logo.jpg"
              className="br-100 ba h3 w3 dib" alt="avatar" />
         </DropdownToggle>
-        <DropdownMenu className='b--transparent shadow-5' 
-                    style={{marginTop: '20px', backgroundColor: 'rgba(255,255,255,0.5'}} {...args}>
-          <DropdownItem>View Profile</DropdownItem>
-          <DropdownItem>Sign Out</DropdownItem>
+        <DropdownMenu   end
+                        className='b--transparent shadow-5' 
+                        style={{backgroundColor: 'rgba(255,255,255,0.5'}}
+                       {...args}>
+          <DropdownItem onClick={toggleModal}>View Profile</DropdownItem>
+          <DropdownItem onClick={() => onRouteChange('signin')}>Sign Out</DropdownItem>
         </DropdownMenu>
       </Dropdown>
        </div>

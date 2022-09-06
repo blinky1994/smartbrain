@@ -11,6 +11,8 @@ import Particles from "react-particles";
 import { loadFull } from "tsparticles";
 import { useCallback } from "react";
 import placeholder from './components/Logo/placeholder.png';
+import Modal from './components/Modal/Modal';
+import Profile from './components/Profile/Profile';
 
 const particlesInit = async (main) => {
     // console.log(main);
@@ -30,6 +32,7 @@ const initialState = {
       imageUrl: '',
       box: [],
       route: 'home',
+      isProfileOpen: false,
       user: {
             id: '',
             name: '',
@@ -123,16 +126,31 @@ class App extends React.Component {
     this.setState({route: route});
   }
 
+  toggleModal = () => {
+    this.setState(prevState => ({
+        ...prevState,
+        isProfileOpen: !prevState.isProfileOpen
+    }))
+  }
+
 
 render() {
-  const { route, imageUrl, box } = this.state;
+  const { route, imageUrl, box, isProfileOpen } = this.state;
 
   return (
     <div className="App">
+
+        {
+           isProfileOpen && 
+           <Modal>
+            <Profile isProfileOpen={isProfileOpen} toggleModal={this.toggleModal} />
+           </Modal>
+        }
       {
         route === 'home' ? 
         <div>
-         <Navigation onRouteChange={this.onRouteChange}/>
+         <Navigation onRouteChange={this.onRouteChange} 
+            toggleModal={this.toggleModal}/>
           <Logo />
           <Rank name={this.state.user.name} entries={this.state.user.entries} />
           <ImageLinkForm onInputChange= {this.onInputChange} onButtonSubmit = {this.onButtonSubmit} />

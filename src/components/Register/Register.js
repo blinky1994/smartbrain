@@ -22,6 +22,10 @@ class Register extends React.Component {
 		this.setState({name: event.target.value});
 	}
 
+	onBackButton = () => {
+		this.props.onRouteChange('signin');
+	}
+
 	onSubmitSignIn = () => {
 		fetch('https://dry-headland-17016.herokuapp.com/register', {
 			method: 'post',
@@ -77,12 +81,21 @@ class Register extends React.Component {
 		        onChange={this.onPasswordChange} />
 		      </div>
 		    </fieldset>
-		    <div className="">
+		    <div className="ph2 flex flex-row justify-between">
+			<div className = "">
+				<input className="br2 b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
+		      		 type="submit" 
+		      		 value="Back"
+		      		 onClick={this.onBackButton}
+		      		  />
+				</div>
+			<div>
 		      <input className="br2 b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
 		      		 type="submit" 
 		      		 value="Register"
 		      		 onClick={this.onSubmitSignIn}
 		      		  />
+				</div>
 		    </div> 
 		  </div>
 		</main>
