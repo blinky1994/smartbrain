@@ -18,8 +18,8 @@ const FaceRecognition = ({imageUrl, box}) => {
 			<div className='absolute mt2'>
 				<img id='inputImage' alt='' src={imageUrl} width='500px' height='auto'/>
 				{	
-					box.map(box => {
-						return <BoundingBox box = {box} />
+					box.map((box, index) => {
+						return <BoundingBox key={index} box = {box} />
 					})
 				}
 			</div>
