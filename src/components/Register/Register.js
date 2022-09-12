@@ -26,7 +26,28 @@ class Register extends React.Component {
 		this.props.onRouteChange('signin');
 	}
 
+	saveAuthTokenInSession = (token) => {
+		window.sessionStorage.setItem('token', token);
+	}
+
 	onSubmitSignIn = () => {
+		// fetch(`${server}/register`, {
+		// 	method: 'post',
+		// 	headers: {'Content-Type': 'application/json'},
+		// 	body: JSON.stringify({
+		// 		email: this.state.email,
+		// 		password: this.state.password,
+		// 		name: this.state.name
+		// 	})
+		// })
+		// .then(response => response.json())
+		// .then(user => {
+		// 	if (user.id) {
+		// 		this.props.loadUser(user);
+		// 		this.props.onRouteChange('home');
+		// 	}
+		// })
+
 		fetch(`${server}/register`, {
 			method: 'post',
 			headers: {'Content-Type': 'application/json'},
@@ -37,12 +58,27 @@ class Register extends React.Component {
 			})
 		})
 		.then(response => response.json())
-		.then(user => {
-			if (user.id) {
-				this.props.loadUser(user);
-				this.props.onRouteChange('home');
-			}
-		})
+      	.then(data => {
+	       	 if(data.userID && data.success === 'true'){
+			  this.saveAuthTokenInSession(data.token);
+			  fetch(`${server}/profile/${data.userID}`, {
+				method: 'get',
+				headers: {
+				  'Content-Type': 'application/json',
+				  'Authorization': data.token
+				}
+				})
+				.then(resp => resp.json())
+				.then(user => {
+				  if (user && user.email)
+				  {
+					this.props.loadUser(user);
+					this.props.onRouteChange('home');
+				  }
+				})
+				.catch(console.log);
+        }
+      })
 		
 	}
 

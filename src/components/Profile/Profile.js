@@ -8,18 +8,12 @@ export default class Profile extends Component {
         super(props);
         this.state = {
             name: this.props.user.name,
-            age: this.props.user.age,
-            pet: this.props.user.pet
         }
     }
 
     onFormChange = (event) => {
         switch (event.target.name) {
             case 'username': this.setState({name: event.target.value})
-            break;
-            case 'age': this.setState({age: event.target.value})
-            break;
-            case 'userpet': this.setState({pet: event.target.value})
             break;
             default:
                 return;
@@ -44,7 +38,7 @@ export default class Profile extends Component {
     
     render() {
         const { user, toggleModal } = this.props;
-        const { name, age, pet } = this.state;
+        const { name } = this.state;
     return (
         <div className='profile-modal'>
         <article className="mv6 br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center bg-white">
@@ -63,25 +57,9 @@ export default class Profile extends Component {
                type="text" 
                name="username"  
                id="name"/>
-           <label className="mt-2 fw6" htmlFor="age">Age:</label>
-               <input 
-               onChange={this.onFormChange}
-               className="br3 pa2 w-100" 
-               placeholder={user.age}
-               type="text" 
-               name="age"  
-               id="name"/>
-           <label className="mt-2 fw6" htmlFor="username">Pet:</label>
-               <input 
-               onChange={this.onFormChange}
-               className="br3 pa2 w-100" 
-               placeholder={user.pet}
-               type="text" 
-               name="userpet"  
-               id="pet"/>
            <div className='mt4' style={{display: 'flex', justifyContent: 'space-evenly'}}>
                <button 
-               onClick={() => this.onProfileUpdate({ name, age, pet })}
+               onClick={() => this.onProfileUpdate({ name })}
                className='b pa2 grow pointer white w-40 bg-light-purple b--black-20'>
                    Save
                </button>

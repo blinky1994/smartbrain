@@ -171,7 +171,9 @@ class App extends React.Component {
     if (route =='signin')
     {
         this.setState(initialState);
+        window.sessionStorage.clear();
     }
+
     this.setState({route: route});
   }
 
