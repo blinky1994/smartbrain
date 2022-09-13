@@ -29,16 +29,14 @@ export default class Rank extends Component {
 
 	render() {
 	return (
-	<div className='flex flex-column content'>
-		<div className='black f3'>
-		{`Hi ${this.props.name}! You have submitted ${this.props.entries} images`}
+		<div className='w-100 flex-column ph5'>
+			<div className='w5 center p black f4 bg-white-80 ba bw b--yellow br2'>
+					{`Rank Badge: ${this.state.rank}`}
+			</div>
+			<div className='black f4 w-100 mw mt2'>
+			{`Hi ${this.props.name}! You have submitted ${this.props.entries} image(s)`}
+			</div>
 		</div>
-
-
-		<div className='mt4 black f3 bg-white-70'>
-		{`Rank Badge: ${this.state.rank}`}
-		</div>
-	</div>
 	)
   }
 }

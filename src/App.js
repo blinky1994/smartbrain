@@ -14,6 +14,7 @@ import placeholder from './components/Logo/placeholder.png';
 import Modal from './components/Modal/Modal';
 import Profile from './components/Profile/Profile';
 import server from './ServerSettings';
+import ErrorMessage from './components/ErrorMessage/ErrorMessage';
 
 const particlesInit = async (main) => {
     // console.log(main);
@@ -33,6 +34,11 @@ const initialState = {
       box: [],
       route: 'signin',
       isProfileOpen: false,
+      showBoundingBox: false,
+      errorMessage: {
+        isActive: false,
+        message: ''
+      },
       user: {
             id: '',
             name: '',
@@ -121,7 +127,7 @@ class App extends React.Component {
 
   displayFaceBox = (box) => {
     if (box) {
-      this.setState({box: box});
+      this.setState({box: box, showBoundingBox: true});
     }
   }
   onInputChange = (event) => {
@@ -129,7 +135,7 @@ class App extends React.Component {
   }
  
   onButtonSubmit = () => {
-    this.setState({imageUrl: this.state.input});
+    this.setState({imageUrl: this.state.input, showBoundingBox: false, errorMessage: {isActive: false}});
        fetch(`${server}/imageurl`, {
             method: 'post',
             headers: {
@@ -140,8 +146,16 @@ class App extends React.Component {
                 input: this.state.input,
                  })
             })
-             .then(response => response.json())
+             .then(response => {
+                if (response.status === 400) {
+                  throw new Error('Bad Request');
+                }
+                console.log("works");
+                this.SetError(false, undefined);
+                return response.json();
+              })
              .then((predictObj) => {
+              console.log(predictObj);
                 if (predictObj) {
                     fetch(`${server}/image`, {
                     method: 'put',
@@ -159,12 +173,12 @@ class App extends React.Component {
                             entries: count.entries
                         }));
                     })
-                    .catch(console.log)
+                    .catch();
                 }
                 this.displayFaceBox(this.calculateFaceLocation(predictObj));
             }
      )
-      .catch(console.log);
+      .catch((err) => this.SetError(true, 'Please enter a valid URL'));
   }
 
   onRouteChange = (route) => {
@@ -173,7 +187,7 @@ class App extends React.Component {
         this.setState(initialState);
         window.sessionStorage.clear();
     }
-
+    this.SetError(false, undefined);
     this.setState({route: route});
   }
 
@@ -184,9 +198,18 @@ class App extends React.Component {
     }))
   }
 
+  SetError = (active, msg) => {
+    this.setState({ 
+      errorMessage: {
+        isActive: active,
+        message: msg
+      }
+    })
+  } 
+
 
 render() {
-  const { route, imageUrl, box, isProfileOpen, user } = this.state;
+  const { route, imageUrl, box, isProfileOpen, user, errorMessage } = this.state;
 
   return (
     <div className="App">
@@ -210,11 +233,12 @@ render() {
           <Logo />
           <Rank name={this.state.user.name} entries={this.state.user.entries} />
           <ImageLinkForm onInputChange= {this.onInputChange} onButtonSubmit = {this.onButtonSubmit} />
-          <FaceRecognition box={box} imageUrl = {imageUrl} />
+          {errorMessage.isActive && <ErrorMessage errorMessage={errorMessage.message}/>}
+          <FaceRecognition showBoundingBox={this.state.showBoundingBox}  box={box} imageUrl = {imageUrl} />
         </div> 
         : 
         (route === 'signin') ?
-        <SignIn loadUser = {this.loadUser} onRouteChange = {this.onRouteChange} /> 
+        <SignIn setError={this.SetError} errorMessage={this.state.errorMessage} loadUser = {this.loadUser} onRouteChange = {this.onRouteChange} /> 
         :
         <Register loadUser = {this.loadUser} onRouteChange = {this.onRouteChange} />
       }

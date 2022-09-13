@@ -1,6 +1,6 @@
 import React from 'react';
 import server from '../../ServerSettings';
-
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 class SignIn extends React.Component {
 	
 	constructor() {
@@ -31,7 +31,12 @@ class SignIn extends React.Component {
 				password: this.state.signInPassword
 			})
 		})
-		.then(response => response.json())
+		.then(response => {
+			if (response.status === 400) {
+				throw new Error('Invalid email/password')
+			}
+			return response.json();
+		})
       	.then(data => {
 	       	 if(data.userID && data.success === 'true'){
 			  this.saveAuthTokenInSession(data.token);
@@ -53,12 +58,14 @@ class SignIn extends React.Component {
 				.catch(console.log);
         }
       })
+	  .catch(err => this.props.setError(true, 'Invalid email / password'));
 	}
 
 	render() {
-		const { onRouteChange } = this.props;
+		const { onRouteChange, errorMessage } = this.props;
 		return (
-			<article className="flex br3 ba b--black-10 mv6 w-100 w-50-m w-25-l mw6 shadow-5 center">
+			<div>
+			<article className="flex br3 ba b--black-10 mt6 w-100 w-50-m w-25-l mw6 shadow-5 center">
 			<main className=" pa4 black-80">
 			  <div className="measure flex-column justify-center">
 			    <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
@@ -96,6 +103,9 @@ class SignIn extends React.Component {
 			  </div>
 			</main>
 			</article>
+			{errorMessage.isActive &&
+			 <ErrorMessage errorMessage={errorMessage.message}/>}
+			</div>
 		);
 	}
 }

@@ -39,7 +39,7 @@ export default class ProfileIcon extends Component {
                         className='b--transparent shadow-5' 
                         style={{backgroundColor: 'rgba(255,255,255,0.5'}}
                        {...args}>
-          <DropdownItem onClick={toggleModal}>View Profile</DropdownItem>
+          <DropdownItem onClick={toggleModal}>Profile Settings</DropdownItem>
           <DropdownItem onClick={() => onRouteChange('signin')}>Sign Out</DropdownItem>
         </DropdownMenu>
       </Dropdown>

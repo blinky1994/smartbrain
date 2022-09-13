@@ -1,7 +1,7 @@
 import React from 'react';
 import BoundingBox from './BoundingBox.js';
 
-const FaceRecognition = ({imageUrl, box}) => {
+const FaceRecognition = ({imageUrl, box, showBoundingBox}) => {
 	if (!box.length)
 	{
 		return (
@@ -18,6 +18,7 @@ const FaceRecognition = ({imageUrl, box}) => {
 			<div className='absolute mt2'>
 				<img id='inputImage' alt='' src={imageUrl} width='500px' height='auto'/>
 				{	
+					showBoundingBox && 
 					box.map((box, index) => {
 						return <BoundingBox key={index} box = {box} />
 					})
