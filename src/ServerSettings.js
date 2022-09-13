@@ -3,7 +3,7 @@ const Servers = {
     Local: 'http://localhost:3001',
   }
 
-  const server = Servers.Local;
+  const server = Servers.Heroku;
   
   export default server;
   
