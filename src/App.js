@@ -15,6 +15,7 @@ import Modal from './components/Modal/Modal';
 import Profile from './components/Profile/Profile';
 import server from './ServerSettings';
 import ErrorMessage from './components/ErrorMessage/ErrorMessage';
+import axios from 'axios';
 
 const particlesInit = async (main) => {
     // console.log(main);
@@ -61,7 +62,7 @@ class App extends React.Component {
   componentDidMount() {
     const token = window.sessionStorage.getItem('token');
     if (token) {
-      fetch(`${server}/signin`, {
+     fetch(`${server}/signin`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -136,7 +137,7 @@ class App extends React.Component {
  
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input, showBoundingBox: false, errorMessage: {isActive: false}});
-       fetch(`${server}/imageurl`, {
+    fetch(`${server}/imageurl`, {
             method: 'post',
             headers: {
               'Content-Type': 'application/json',
@@ -157,7 +158,7 @@ class App extends React.Component {
              .then((predictObj) => {
               console.log(predictObj);
                 if (predictObj) {
-                    fetch(`${server}/image`, {
+                  fetch(`${server}/image`, {
                     method: 'put',
                     headers: {
                       'Content-Type': 'application/json',

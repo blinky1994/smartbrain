@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Profile.css';
 import server from '../../ServerSettings';
+import axios from 'axios';
 
 export default class Profile extends Component {
     constructor(props)
